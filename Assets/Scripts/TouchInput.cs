@@ -16,19 +16,22 @@ public class TouchInput : MonoBehaviour
     private bool isSwipeFingerPressing;
     private bool upSwipe, downSwipe, leftSwipe, rightSwipe;
 
+    private string touchResulText;
+
     void Update()
     {
         if (Input.touchCount > 0)
         {
             foreach (Touch touch in Input.touches)
             {
-                fingerIdText.SetText($"Current finger {touch.fingerId}\nPos {touch.position}\nTap count {touch.tapCount}");
+                touchResulText += $"Current finger {touch.fingerId} Pos {touch.position} Tap count {touch.tapCount}\n";
 
                 if (touch.fingerId != joystickFingerId)
                 {
-                    if (touch.tapCount > 1)
+                    // Double tap check
+                    if (touch.tapCount > 0 && touch.tapCount % 2 == 0)
                     {
-                        Debug.Log("Double tap");
+                        Debug.Log("Double tap " + touch.tapCount);
                         // NOTE: Reset tap count
                         return;
                     }
@@ -65,6 +68,9 @@ public class TouchInput : MonoBehaviour
                     }
                 }
             }
+
+            fingerIdText.SetText(touchResulText);
+            touchResulText = "";
 
             if (joystickFingerId != NULL_TOUCH_FINGER_ID)
             {
